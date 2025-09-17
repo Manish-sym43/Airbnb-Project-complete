@@ -83,8 +83,8 @@ app.get("/listings/:id", wrapAsync(async (req, res) => {
 
 
 //Create Route
-app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
-  const newListing = new Listing(req.body.listing);
+// app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
+//   const newListing = new Listing(req.body.listing);
 
   // if (!newListing.description) {
   //   throw new ExpressError(400, "Description is missing!");
@@ -95,10 +95,22 @@ app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
   // if (!newListing.location) {
   //   throw new ExpressError(400, "Location is missing!");
   // }
+  // await newListing.save();
+  // res.redirect("/listings");
+// })
+// );
+app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
+  const { listing } = req.body;
+  const newListing = new Listing(listing);
+
+  // Agar user ne URL diya hai to filename default set ho jaye
+  if (newListing.image && newListing.image.url && newListing.image.url.trim() !== "") {
+    newListing.image.filename = "listingImage";
+  }
+
   await newListing.save();
   res.redirect("/listings");
-})
-);
+}));
 
 
 //Edit Route
